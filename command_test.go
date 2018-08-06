@@ -1,3 +1,4 @@
+// Modified by Chunkai Chou <kavenc@gmail.com>
 package cobra
 
 import (
@@ -11,7 +12,7 @@ import (
 	"github.com/spf13/pflag"
 )
 
-func emptyRun(*Command, []string) {}
+func emptyRun(*Command, []string, ...interface{}) {}
 
 func executeCommand(root *Command, args ...string) (output string, err error) {
 	_, output, err = executeCommandC(root, args...)
@@ -49,7 +50,7 @@ func TestSingleCommand(t *testing.T) {
 	rootCmd := &Command{
 		Use:  "root",
 		Args: ExactArgs(2),
-		Run:  func(_ *Command, args []string) { rootCmdArgs = args },
+		Run:  func(_ *Command, args []string, _ ...interface{}) { rootCmdArgs = args },
 	}
 	aCmd := &Command{Use: "a", Args: NoArgs, Run: emptyRun}
 	bCmd := &Command{Use: "b", Args: NoArgs, Run: emptyRun}
@@ -76,7 +77,7 @@ func TestChildCommand(t *testing.T) {
 	child1Cmd := &Command{
 		Use:  "child1",
 		Args: ExactArgs(2),
-		Run:  func(_ *Command, args []string) { child1CmdArgs = args },
+		Run:  func(_ *Command, args []string, _ ...interface{}) { child1CmdArgs = args },
 	}
 	child2Cmd := &Command{Use: "child2", Args: NoArgs, Run: emptyRun}
 	rootCmd.AddCommand(child1Cmd, child2Cmd)
@@ -159,7 +160,7 @@ func TestCommandAlias(t *testing.T) {
 	timesCmd := &Command{
 		Use:  "times",
 		Args: ExactArgs(2),
-		Run:  func(_ *Command, args []string) { timesCmdArgs = args },
+		Run:  func(_ *Command, args []string, _ ...interface{}) { timesCmdArgs = args },
 	}
 	echoCmd.AddCommand(timesCmd)
 	rootCmd.AddCommand(echoCmd)
@@ -187,7 +188,7 @@ func TestEnablePrefixMatching(t *testing.T) {
 	aCmd := &Command{
 		Use:  "aCmd",
 		Args: ExactArgs(2),
-		Run:  func(_ *Command, args []string) { aCmdArgs = args },
+		Run:  func(_ *Command, args []string, _ ...interface{}) { aCmdArgs = args },
 	}
 	bCmd := &Command{Use: "bCmd", Args: NoArgs, Run: emptyRun}
 	rootCmd.AddCommand(aCmd, bCmd)
@@ -223,7 +224,7 @@ func TestAliasPrefixMatching(t *testing.T) {
 	timesCmd := &Command{
 		Use:  "times",
 		Args: ExactArgs(2),
-		Run:  func(_ *Command, args []string) { timesCmdArgs = args },
+		Run:  func(_ *Command, args []string, _ ...interface{}) { timesCmdArgs = args },
 	}
 	echoCmd.AddCommand(timesCmd)
 	rootCmd.AddCommand(echoCmd)
@@ -254,7 +255,7 @@ func TestChildSameName(t *testing.T) {
 	fooCmd := &Command{
 		Use:  "foo",
 		Args: ExactArgs(2),
-		Run:  func(_ *Command, args []string) { fooCmdArgs = args },
+		Run:  func(_ *Command, args []string, _ ...interface{}) { fooCmdArgs = args },
 	}
 	barCmd := &Command{Use: "bar", Args: NoArgs, Run: emptyRun}
 	rootCmd.AddCommand(fooCmd, barCmd)
@@ -284,7 +285,7 @@ func TestGrandChildSameName(t *testing.T) {
 	fooCmd := &Command{
 		Use:  "foo",
 		Args: ExactArgs(2),
-		Run:  func(_ *Command, args []string) { fooCmdArgs = args },
+		Run:  func(_ *Command, args []string, _ ...interface{}) { fooCmdArgs = args },
 	}
 	barCmd.AddCommand(fooCmd)
 	rootCmd.AddCommand(barCmd)
@@ -309,7 +310,7 @@ func TestFlagLong(t *testing.T) {
 	c := &Command{
 		Use:  "c",
 		Args: ArbitraryArgs,
-		Run:  func(_ *Command, args []string) { cArgs = args },
+		Run:  func(_ *Command, args []string, _ ...interface{}) { cArgs = args },
 	}
 
 	var intFlagValue int
@@ -347,7 +348,7 @@ func TestFlagShort(t *testing.T) {
 	c := &Command{
 		Use:  "c",
 		Args: ArbitraryArgs,
-		Run:  func(_ *Command, args []string) { cArgs = args },
+		Run:  func(_ *Command, args []string, _ ...interface{}) { cArgs = args },
 	}
 
 	var intFlagValue int
@@ -536,7 +537,7 @@ func TestDisableFlagParsing(t *testing.T) {
 	c := &Command{
 		Use:                "c",
 		DisableFlagParsing: true,
-		Run: func(_ *Command, args []string) {
+		Run: func(_ *Command, args []string, _ ...interface{}) {
 			cArgs = args
 		},
 	}
@@ -560,7 +561,7 @@ func TestPersistentFlagsOnSameCommand(t *testing.T) {
 	rootCmd := &Command{
 		Use:  "root",
 		Args: ArbitraryArgs,
-		Run:  func(_ *Command, args []string) { rootCmdArgs = args },
+		Run:  func(_ *Command, args []string, _ ...interface{}) { rootCmdArgs = args },
 	}
 
 	var flagValue int
@@ -643,7 +644,7 @@ func TestPersistentFlagsOnChild(t *testing.T) {
 	childCmd := &Command{
 		Use:  "child",
 		Args: ArbitraryArgs,
-		Run:  func(_ *Command, args []string) { childCmdArgs = args },
+		Run:  func(_ *Command, args []string, _ ...interface{}) { childCmdArgs = args },
 	}
 	rootCmd.AddCommand(childCmd)
 
@@ -765,7 +766,7 @@ func TestSetHelpCommand(t *testing.T) {
 		Short: "Help about any command",
 		Long: `Help provides help for any command in the application.
 	Simply type ` + c.Name() + ` help [path to command] for full details.`,
-		Run: func(c *Command, _ []string) { c.Print(expected) },
+		Run: func(c *Command, _ []string, _ ...interface{}) { c.Print(expected) },
 	})
 
 	got, err := executeCommand(c, "help")
@@ -807,9 +808,9 @@ func TestHelpFlagExecutedOnChild(t *testing.T) {
 // that has no other flags.
 // Related to https://github.com/spf13/cobra/issues/302.
 func TestHelpFlagInHelp(t *testing.T) {
-	parentCmd := &Command{Use: "parent", Run: func(*Command, []string) {}}
+	parentCmd := &Command{Use: "parent", Run: emptyRun}
 
-	childCmd := &Command{Use: "child", Run: func(*Command, []string) {}}
+	childCmd := &Command{Use: "child", Run: emptyRun}
 	parentCmd.AddCommand(childCmd)
 
 	output, err := executeCommand(parentCmd, "help", "child")
@@ -821,7 +822,7 @@ func TestHelpFlagInHelp(t *testing.T) {
 }
 
 func TestFlagsInUsage(t *testing.T) {
-	rootCmd := &Command{Use: "root", Args: NoArgs, Run: func(*Command, []string) {}}
+	rootCmd := &Command{Use: "root", Args: NoArgs, Run: emptyRun}
 	output, err := executeCommand(rootCmd, "--help")
 	if err != nil {
 		t.Errorf("Unexpected error: %v", err)
@@ -1004,11 +1005,11 @@ func TestReplaceCommandWithRemove(t *testing.T) {
 	rootCmd := &Command{Use: "root", Run: emptyRun}
 	child1Cmd := &Command{
 		Use: "child",
-		Run: func(*Command, []string) { childUsed = 1 },
+		Run: func(*Command, []string, ...interface{}) { childUsed = 1 },
 	}
 	child2Cmd := &Command{
 		Use: "child",
-		Run: func(*Command, []string) { childUsed = 2 },
+		Run: func(*Command, []string, ...interface{}) { childUsed = 2 },
 	}
 	rootCmd.AddCommand(child1Cmd)
 	rootCmd.RemoveCommand(child1Cmd)
@@ -1064,7 +1065,7 @@ func TestHooks(t *testing.T) {
 		PreRun: func(_ *Command, args []string) {
 			preArgs = strings.Join(args, " ")
 		},
-		Run: func(_ *Command, args []string) {
+		Run: func(_ *Command, args []string, _ ...interface{}) {
 			runArgs = strings.Join(args, " ")
 		},
 		PostRun: func(_ *Command, args []string) {
@@ -1125,7 +1126,7 @@ func TestPersistentHooks(t *testing.T) {
 		PreRun: func(_ *Command, args []string) {
 			parentPreArgs = strings.Join(args, " ")
 		},
-		Run: func(_ *Command, args []string) {
+		Run: func(_ *Command, args []string, _ ...interface{}) {
 			parentRunArgs = strings.Join(args, " ")
 		},
 		PostRun: func(_ *Command, args []string) {
@@ -1144,7 +1145,7 @@ func TestPersistentHooks(t *testing.T) {
 		PreRun: func(_ *Command, args []string) {
 			childPreArgs = strings.Join(args, " ")
 		},
-		Run: func(_ *Command, args []string) {
+		Run: func(_ *Command, args []string, _ ...interface{}) {
 			childRunArgs = strings.Join(args, " ")
 		},
 		PostRun: func(_ *Command, args []string) {
@@ -1306,7 +1307,7 @@ func TestHiddenCommandExecutes(t *testing.T) {
 	c := &Command{
 		Use:    "c",
 		Hidden: true,
-		Run:    func(*Command, []string) { executed = true },
+		Run:    func(*Command, []string, ...interface{}) { executed = true },
 	}
 
 	output, err := executeCommand(c)
@@ -1579,7 +1580,7 @@ func (tc *calledAsTestcase) test(t *testing.T) {
 	EnablePrefixMatching = tc.epm
 
 	var called *Command
-	run := func(c *Command, _ []string) { t.Logf("called: %q", c.Name()); called = c }
+	run := func(c *Command, _ []string, _ ...interface{}) { t.Logf("called: %q", c.Name()); called = c }
 
 	parent := &Command{Use: "parent", Run: run}
 	child1 := &Command{Use: "child1", Run: run, Aliases: []string{"this"}}
@@ -1732,4 +1733,55 @@ func TestFParseErrWhitelistSiblingCommand(t *testing.T) {
 		t.Error("expected unknown flag error")
 	}
 	checkStringContains(t, output, "unknown flag: --unknown")
+}
+
+type extraType1 struct {
+	field1 bool
+}
+
+type extraType2 struct {
+	field2 bool
+}
+
+func TestExtraArgsAreForwarded(t *testing.T) {
+	root := &Command{
+		Use: "root",
+		Run: emptyRun,
+	}
+
+	subcmd := &Command{
+		Use: "sub",
+		Run: func(_ *Command, _ []string, extra ...interface{}) {
+			for _, arg := range extra {
+				switch v := arg.(type) {
+				case *extraType1:
+					v.field1 = true
+				case *extraType2:
+					v.field2 = true
+				default:
+					t.Errorf("Unknown type: %T", v)
+				}
+			}
+		},
+	}
+
+	root.AddCommand(subcmd)
+	root.SetArgs([]string{"sub"})
+
+	// One argument
+	arg1 := extraType1{field1: false}
+	root.Execute(&arg1)
+	if !arg1.field1 {
+		// arg1.field1 should be set to true by Run
+		t.Fail()
+	}
+
+	// Two arguments
+	arg1 = extraType1{field1: false}
+	arg2 := extraType2{field2: false}
+	root.Execute(&arg1, &arg2)
+	if !arg1.field1 || !arg2.field2 {
+		// arg1.field1 and arg2.field2 should be set to true by Run
+		t.Fail()
+	}
 }
