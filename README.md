@@ -6,7 +6,9 @@ Modified version of [Cobra](https://github.com/spf13/cobra)
 
 # Change Logs
 - `Execute()` now accepts arguments which will be passed to command `Run()` function.
-- Test with go 1.10.x and 1.11.x
+- Test with go version:
+    - 1.10.x
+    - 1.11.x
 
 # License
 
