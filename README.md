@@ -1,7 +1,7 @@
 Modified version of [Cobra](https://github.com/spf13/cobra)
 
 [![Build Status](https://travis-ci.org/kavenc/cobra.svg "Travis CI status")](https://travis-ci.org/kavenc/cobra)
-[![CircleCI status](https://circleci.com/gh/kavenc/cobra.png?circle-token=:circle-token "CircleCI status")](https://circleci.com/gh/kavenc/cobra)
+[![CircleCI](https://circleci.com/gh/KavenC/cobra.svg?style=svg)](https://circleci.com/gh/KavenC/cobra)
 [![GoDoc](https://godoc.org/github.com/spf13/cobra?status.svg)](https://godoc.org/github.com/kavenc/cobra)
 
 # Change Logs
