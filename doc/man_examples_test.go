@@ -4,8 +4,8 @@ import (
 	"bytes"
 	"fmt"
 
-	"github.com/spf13/cobra"
-	"github.com/spf13/cobra/doc"
+	"github.com/KavenC/cobra"
+	"github.com/KavenC/cobra/doc"
 )
 
 func ExampleGenManTree() {
