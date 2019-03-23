@@ -1,8 +1,8 @@
 Modified version of [Cobra](https://github.com/spf13/cobra)
 
-[![Build Status](https://travis-ci.org/kavenc/cobra.svg "Travis CI status")](https://travis-ci.org/kavenc/cobra)
+[![Build Status](https://travis-ci.org/KavenC/cobra.svg?branch=master)](https://travis-ci.org/KavenC/cobra)
 [![CircleCI](https://circleci.com/gh/KavenC/cobra.svg?style=svg)](https://circleci.com/gh/KavenC/cobra)
-[![GoDoc](https://godoc.org/github.com/spf13/cobra?status.svg)](https://godoc.org/github.com/kavenc/cobra)
+[![GoDoc](https://godoc.org/github.com/KavenC/cobra?status.svg)](https://godoc.org/github.com/KavenC/cobra)
 
 # Change Logs
 - `Execute()` now accepts arguments which will be passed to command `Run()` function.
